@@ -10,11 +10,10 @@ var express = require('express'),
 // project requirements
 var mongoose = require('mongoose'),
     jwt = require('jsonwebtoken'),
-    config = require('./config');
+    config = require('./app/config');
 
 // api url routes
-var routeStudent = require('./routes/students');
-var routeLabs = require('./routes/labs');
+var routeHome = require('./app/routes/home-router');
 
 var app = express();
 
@@ -43,8 +42,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // api url routes usage
-app.use('/students', routeStudent);
-app.use('/labs', routeLabs);
+app.use('/home', routeHome);
 
 // logger
 app.use(morgan('dev'));
@@ -56,16 +54,15 @@ app.use(function(req, res, next) {
   next(err);
 });
 
-// error handlers
-
+//--- ERROR HANDLERS ---
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
-    res.render('error', {
+    return res.json({
       message: err.message,
-      error: err
+      error: err.status
     });
   });
 }
@@ -74,7 +71,7 @@ if (app.get('env') === 'development') {
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
-  res.render('error', {
+  return res.json({
     message: err.message,
     error: {}
   });
