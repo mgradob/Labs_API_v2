@@ -73,8 +73,15 @@ var UserSchema = new Schema({
         type: String,
         required: true
     },
-    id_credential: Number,
+    id_credential: {
+        type: Number,
+        default: 0
+    },
     career: {
+        type: String,
+        required: true
+    },
+    campus: {
         type: String,
         required: true
     },

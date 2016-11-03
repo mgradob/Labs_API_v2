@@ -16,9 +16,29 @@ module.exports.labs_response = {
             code: 200,
             message: 'Failed - Reason Unknown'
         },
+        sign_up: {
+            already_exists: {
+                code: 201,
+                message: 'User already exists'
+            },
+            no_user_found: {
+                code: 202,
+                message: 'User not found'
+            }
+        },
+        sign_in: {
+            missing_info: {
+                code: 211,
+                message: 'Missing username or password'
+            },
+            wrong_info: {
+                code: 212,
+                message: 'Incorrect username or password'
+            }
+        },
         home: {
             no_labs_accepted: {
-                code: 201,
+                code: 221,
                 message: 'User hasn\'t been accepted to a lab yet'
             }
         }
@@ -27,4 +47,4 @@ module.exports.labs_response = {
         code: 300,
         message: 'Not implemented yet'
     }
-}
+};

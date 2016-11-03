@@ -13,18 +13,23 @@ var mongoose = require('mongoose'),
     config = require('./app/config');
 
 // api url routes
-var routeHome = require('./app/routes/home-router');
+var routeSignUp = require('./app/routes/sign-up-router'),
+    routeSignIn = require('./app/routes/sign-in-router'),
+    routeHome = require('./app/routes/home-router');
 
 var app = express();
 
-// database setup
+//region DATABASE SETUP
 mongoose.connect(config.dbUrl);
+
 mongoose.connection.on('connected', function () {
     console.log('Connected to DB');
 });
+
 mongoose.connection.on('error', function (err) {
     console.log('Error on db connection: ' + err);
 });
+//endregion
 
 // set secret for json web token
 app.set('secret', config.dbSecret);
@@ -37,45 +42,47 @@ app.set('view engine', 'jade');
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // api url routes usage
 app.use('/home', routeHome);
+app.use('/signin', routeSignIn);
+app.use('/signup', routeSignUp);
 
 // logger
 app.use(morgan('dev'));
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+app.use(function (req, res, next) {
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
 });
 
-//--- ERROR HANDLERS ---
+//region ERROR HANDLERS
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    return res.json({
-      message: err.message,
-      error: err.status
+    app.use(function (err, req, res, next) {
+        res.status(err.status || 500);
+        return res.json({
+            message: err.message,
+            error: err.status
+        });
     });
-  });
 }
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  return res.json({
-    message: err.message,
-    error: {}
-  });
+app.use(function (err, req, res, next) {
+    res.status(err.status || 500);
+    return res.json({
+        message: err.message,
+        error: {}
+    });
 });
-
+//endregion
 
 module.exports = app;

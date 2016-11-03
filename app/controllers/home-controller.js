@@ -1,3 +1,6 @@
+/**
+ * Created by mgradob on 11/2/16.
+ */
 var UserModel = require('../models/user'),
     LabModel = require('../models/lab'),
     response = require('../utils/api-utils').labs_response;
@@ -11,10 +14,15 @@ var studentHomeResponse = {
     history: []
 };
 
+/**
+ * Gets the home information for the requested user
+ * @param userId of the requested user
+ * @param callback
+ */
 module.exports.getUserHome = function (userId, callback) {
     UserModel.findOne({
-        'id_user': userId
-    })
+            id_user: userId
+        })
         .exec(function (err, student) {
             if (err) return callback(response.failed.generic);
 
@@ -26,14 +34,14 @@ module.exports.getUserHome = function (userId, callback) {
                 studentHomeResponse.history = student.history;
 
                 LabModel.find({
-                    'id': {
-                        $in: student.labs
-                    }
-                }, {
-                    '_id': 0,
-                    'name': 1,
-                    'categories': 1
-                })
+                        id: {
+                            $in: student.labs
+                        }
+                    }, {
+                        _id: 0,
+                        name: 1,
+                        categories: 1
+                    })
                     .exec(function (err, labs) {
                         if (err) return callback(response.failed.generic);
 

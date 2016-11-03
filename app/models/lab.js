@@ -60,6 +60,10 @@ var LabSchema = new Schema({
         type: String,
         required: true
     },
+    campus: {
+        type: String,
+        required: true
+    },
     categories: [CategorySchema],
     requests: [RequestSchema]
 });
