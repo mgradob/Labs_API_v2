@@ -3,5 +3,5 @@
  */
 module.exports = {
     dbSecret: 'dsp-server',
-    dbUrl: '127.0.0.1/labs-api'
+    dbUrl: 'mongodb://test:test@ds157487.mlab.com:57487/labs-cuu'
 };
