@@ -4,6 +4,7 @@
 var jwt = require('jwt-simple'),
     UserModel = require('../models/user'),
     response = require('../utils/api-utils').labs_response,
+    logger = require('../utils/log-util'),
     secret = require('../config').dbSecret;
 
 /**
@@ -19,18 +20,19 @@ var jwt = require('jwt-simple'),
 module.exports.signIn = function (signInInfo, callback) {
     if (!signInInfo || signInInfo.id_user === '' || signInInfo.password === '') return callback(response.failed.missing_info);
 
-    UserModel.findOne({id_user: signInInfo.id_user})
-        .exec(function (err, user) {
-            if (err) return callback(response.failed.generic);
+    UserModel.findOne({id_user: signInInfo.id_user}, function (err, user) {
+        if (err) return callback(response.failed.generic, null);
 
-            user.comparePassword(signInInfo.password, function (err, match) {
-                if (match && !err) {
-                    var token = jwt.encode(user.id_user, secret);
+        user.comparePassword(signInInfo.password, function (err, match) {
+            if (match && !err) {
+                var token = jwt.encode(user.id_user, secret);
 
-                    return callback(response.success, {
-                        token: 'JWT ' + token
-                    });
-                } else return callback(response.failed.sign_in.wrong_info);
-            });
+                logger.logi('Sign In', 'Token: ' + token);
+
+                return callback(response.success, {
+                    token: 'JWT ' + token
+                });
+            } else return callback(response.failed.sign_in.wrong_info, null);
         });
+    });
 };
