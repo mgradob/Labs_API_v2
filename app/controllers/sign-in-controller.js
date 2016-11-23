@@ -1,21 +1,13 @@
 /**
  * Created by mgradob on 11/2/16.
  */
-var jwt = require('jwt-simple'),
-    UserModel = require('../models/user'),
-    response = require('../utils/api-utils').labs_response,
+var UserModel = require('../models/user'),
+    response = require('../utils/api-util').labs_response,
     logger = require('../utils/log-util'),
-    secret = require('../config').dbSecret;
+    authUtil = require('../utils/auth-util');
 
 /**
  * Signs in an user, based on the post info.
- * @param signInInfo body:
- * <ul>
- * <li>id_user: id of the user (i.e. A01234567)
- * <li>password: user´s password
- * </ul>
- * @param callback used to talk to the router
- * @returns {*}
  */
 module.exports.signIn = function (signInInfo, callback) {
     if (!signInInfo || signInInfo.id_user === '' || signInInfo.password === '') return callback(response.failed.missing_info);
@@ -25,13 +17,11 @@ module.exports.signIn = function (signInInfo, callback) {
 
         user.comparePassword(signInInfo.password, function (err, match) {
             if (match && !err) {
-                var token = jwt.encode(user.id_user, secret);
+                var token = authUtil.generateToken(user.user_id);
 
                 logger.logi('Sign In', 'Token: ' + token);
 
-                return callback(response.success, {
-                    token: 'JWT ' + token
-                });
+                return callback(response.success, {token: 'JWT ' + token});
             } else return callback(response.failed.sign_in.wrong_info, null);
         });
     });

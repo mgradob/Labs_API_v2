@@ -9,12 +9,14 @@ var express = require('express'),
 
 // project requirements
 var mongoose = require('mongoose'),
-    jwt = require('jsonwebtoken'),
+    passport = require('passport'),
+    jwt = require('jwt-simple'),
     config = require('./app/config');
 
 // api url routes
 var routeSignUp = require('./app/routes/sign-up-router'),
     routeSignIn = require('./app/routes/sign-in-router'),
+    routeSignOut = require('./app/routes/sign-out-router'),
     routeHome = require('./app/routes/home-router');
 
 var app = express();
@@ -50,6 +52,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/home', routeHome);
 app.use('/signin', routeSignIn);
 app.use('/signup', routeSignUp);
+app.use('/signout', routeSignOut);
+
+// api auth
+app.use(passport.initialize());
 
 // logger
 app.use(morgan('dev'));
