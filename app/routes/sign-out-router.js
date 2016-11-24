@@ -11,9 +11,7 @@ var express = require('express'),
 router.use('/', authUtil.validateToken);
 router.route('/')
     .post(passport.authenticate('jwt', {session: false}), function (req, res) {
-        var tokenInfo = authUtil.decodeToken(authUtil.getToken(req.headers));
-
-        controller.signOut(tokenInfo.user_id, function (result, data) {
+        controller.signOut(req, function (result, data) {
             return res.json(apiResponse(result, data));
         });
     });

@@ -6,6 +6,6 @@ var UserModel = require('../models/user'),
     logger = require('../utils/log-util'),
     authUtil = require('../utils/auth-util');
 
-module.exports.signOut = function (user_id, callback) {
-    return callback(response.failed.generic, null);
+module.exports.signOut = function (req, callback) {
+    return callback(response.not_implemented_yet);
 };
