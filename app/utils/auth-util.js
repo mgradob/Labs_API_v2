@@ -3,13 +3,14 @@
  */
 var jwt = require('jwt-simple'),
     secret = require('../config').dbSecret,
+    moment = require('moment'),
     apiResponse = require('../utils/api-util').LabsJsonResponse,
     response = require('../utils/api-util').labs_response;
 
 module.exports.generateToken = function (username) {
     return jwt.encode({
         user_id: username,
-        exp: moment().add('days', 1).valueOf()
+        exp: moment().add(1, 'days').valueOf()
     }, secret);
 };
 
@@ -26,7 +27,7 @@ module.exports.getToken = function (headers) {
 };
 
 module.exports.validateToken = function (req, res, next) {
-    var token = exports.getToken(req.headers);
+    var token = exports.decodeToken(exports.getToken(req.headers));
 
     if (token) {
         if (token.exp <= Date.now()) {

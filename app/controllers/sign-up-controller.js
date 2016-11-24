@@ -18,24 +18,31 @@ var UserModel = require('../models/user'),
  * @param callback
  */
 module.exports.signUp = function (signUpInfo, callback) {
-    var user = new UserModel({
-        id_user: signUpInfo.id_user,
-        password: signUpInfo.password,
-        full_name: signUpInfo.full_name,
-        id_credential: 0,
-        career: signUpInfo.career,
-        campus: signUpInfo.campus,
-        mail: signUpInfo.id_user + '@itesm.mx',
-        cart: [],
-        borrowed: [],
-        labs: [],
-        history: []
-    });
+    UserModel.findOne({id_user: signUpInfo.id_user}, function (err, user) {
+        if (err) return callback(response.failed.generic);
 
-    user.save(function (err) {
-        if (err) return callback(response.failed.sign_up.already_exists);
+        if (user) return callback(response.failed.sign_up.already_exists);
 
-        return callback(response.success);
+        var newUser = new UserModel({
+            id_user: signUpInfo.id_user,
+            password: signUpInfo.password,
+            full_name: signUpInfo.full_name,
+            id_credential: 0,
+            career: signUpInfo.career,
+            campus: signUpInfo.campus,
+            mail: signUpInfo.id_user + '@itesm.mx',
+            cart: [],
+            borrowed: [],
+            labs: [],
+            history: []
+        });
+
+        newUser.save(function (err) {
+            if (err) return callback(response.failed.sign_up.already_exists);
+
+            return callback(response.success);
+        });
+
     });
 };
 
@@ -45,19 +52,18 @@ module.exports.signUp = function (signUpInfo, callback) {
  * @param callback
  */
 module.exports.getAllLabs = function (id_user, callback) {
-    UserModel.findOne({id_user: id_user})
-        .exec(function (err, user) {
-            if (err) return callback(response.failed.generic);
+    UserModel.findOne({id_user: id_user}, function (err, user) {
+        if (err) return callback(response.failed.generic);
 
-            if (!user) return callback(response.failed.sign_up.no_user_found);
+        if (!user) return callback(response.failed.sign_up.no_user_found);
 
-            LabModel.find({campus: user.campus}, {_id: 0, id: 1, name: 1})
-                .exec(function (err, labs) {
-                    if (err) return callback(response.failed.generic);
+        LabModel.find({campus: user.campus}, {_id: 0, id: 1, name: 1})
+            .exec(function (err, labs) {
+                if (err) return callback(response.failed.generic);
 
-                    return callback(response.success, labs);
-                });
-        });
+                return callback(response.success, labs);
+            });
+    });
 };
 
 /**
@@ -70,18 +76,17 @@ module.exports.getAllLabs = function (id_user, callback) {
  * @param callback
  */
 module.exports.addLabs = function (id_user, addLabsInfo, callback) {
-    UserModel.findOne({id_user: id_user})
-        .exec(function (err, user) {
+    UserModel.findOne({id_user: id_user}, function (err, user) {
+        if (err) return callback(response.failed.generic);
+
+        if (!user) return callback(response.failed.sign_up.no_user_found);
+
+        user.labs = addLabsInfo.labs;
+
+        user.save(function (err) {
             if (err) return callback(response.failed.generic);
 
-            if (!user) return callback(response.failed.sign_up.no_user_found);
-
-            user.labs = addLabsInfo.labs;
-
-            user.save(function (err) {
-                if (err) return callback(response.failed.generic);
-
-                return callback(response.success);
-            });
+            return callback(response.success);
         });
+    });
 };

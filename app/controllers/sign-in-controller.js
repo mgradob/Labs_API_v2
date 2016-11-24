@@ -10,10 +10,10 @@ var UserModel = require('../models/user'),
  * Signs in an user, based on the post info.
  */
 module.exports.signIn = function (signInInfo, callback) {
-    if (!signInInfo || signInInfo.id_user === '' || signInInfo.password === '') return callback(response.failed.missing_info);
+    if (!signInInfo || !signInInfo.id_user || !signInInfo.password) return callback(response.failed.sign_in.missing_info);
 
     UserModel.findOne({id_user: signInInfo.id_user}, function (err, user) {
-        if (err) return callback(response.failed.generic, null);
+        if (err) return callback(response.failed.generic);
 
         user.comparePassword(signInInfo.password, function (err, match) {
             if (match && !err) {
@@ -22,7 +22,7 @@ module.exports.signIn = function (signInInfo, callback) {
                 logger.logi('Sign In', 'Token: ' + token);
 
                 return callback(response.success, {token: 'JWT ' + token});
-            } else return callback(response.failed.sign_in.wrong_info, null);
+            } else return callback(response.failed.sign_in.wrong_info);
         });
     });
 };

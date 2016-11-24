@@ -49,10 +49,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // api url routes usage
-app.use('/home', routeHome);
 app.use('/signin', routeSignIn);
 app.use('/signup', routeSignUp);
 app.use('/signout', routeSignOut);
+app.use('/home', routeHome);
 
 // api auth
 app.use(passport.initialize());
