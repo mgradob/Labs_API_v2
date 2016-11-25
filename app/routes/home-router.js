@@ -4,7 +4,7 @@
 var express = require('express'),
     router = express.Router(),
     controller = require('../controllers/home-controller'),
-    apiResponse = require('../utils/api-utils').LabsJsonResponse;
+    apiResponse = require('../utils/api-util').LabsJsonResponse;
 
 router.route('/:id_user')
     .get(function (req, res) {

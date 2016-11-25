@@ -46,5 +46,15 @@ module.exports.labs_response = {
     not_implemented_yet: {
         code: 300,
         message: 'Not implemented yet'
+    },
+    auth_failed: {
+        no_token_provided: {
+            code: 400,
+            message: 'No token provided'
+        },
+        token_expired: {
+            code: 401,
+            message: 'Token expired'
+        }
     }
 };
