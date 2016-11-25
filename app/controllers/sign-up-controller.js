@@ -57,8 +57,7 @@ module.exports.getAllLabs = function (id_user, callback) {
 
         if (!user) return callback(response.failed.sign_up.no_user_found);
 
-        LabModel.find({campus: user.campus}, {_id: 0, id: 1, name: 1})
-            .exec(function (err, labs) {
+        LabModel.find({campus: user.campus}, {_id: 0, id: 1, name: 1}, function (err, labs) {
                 if (err) return callback(response.failed.generic);
 
                 return callback(response.success, labs);

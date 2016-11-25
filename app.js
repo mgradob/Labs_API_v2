@@ -11,7 +11,8 @@ var express = require('express'),
 var mongoose = require('mongoose'),
     passport = require('passport'),
     jwt = require('jwt-simple'),
-    config = require('./app/config');
+    config = require('./app/config'),
+    cors = require('cors');
 
 // api url routes
 var routeSignUp = require('./app/routes/sign-up-router'),
@@ -35,6 +36,9 @@ mongoose.connection.on('error', function (err) {
 
 // set secret for json web token
 app.set('secret', config.dbSecret);
+
+// set cors usage
+app.use(cors());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
