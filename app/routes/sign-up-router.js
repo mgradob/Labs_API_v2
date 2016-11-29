@@ -20,7 +20,7 @@ router.route('/:id_user')
         });
     })
     .post(function (req, res) {
-        controller.addLabs(req.params.id_user, req.body, function (result, data) {
+        controller.addSignUpRequest(req.params.id_user, req.body.labs, function (result, data) {
             return res.json(apiResponse(result, data));
         });
     });

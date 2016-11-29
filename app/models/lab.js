@@ -49,6 +49,7 @@ var RequestSchema = new Schema({
         type: Date,
         required: true
     }
+    //TODO review model
 });
 
 var LabSchema = new Schema({
