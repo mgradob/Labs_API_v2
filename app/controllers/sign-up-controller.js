@@ -3,7 +3,8 @@
  */
 var UserModel = require('../models/user'),
     LabModel = require('../models/lab'),
-    response = require('../utils/api-utils').labs_response;
+    response = require('../utils/api-util').labs_response,
+    async = require('async');
 
 /**
  * Creates a user with default params.
@@ -51,34 +52,62 @@ module.exports.getAllLabs = function (id_user, callback) {
 
             if (!user) return callback(response.failed.sign_up.no_user_found);
 
-            LabModel.find({campus: user.campus}, {_id: 0, id: 1, name: 1})
-                .exec(function (err, labs) {
-                    if (err) return callback(response.failed.generic);
+        LabModel.find({campus: user.campus}, {_id: 0, id: 1, name: 1}, function (err, labs) {
+            if (err) return callback(response.failed.generic);
 
-                    return callback(response.success, labs);
-                });
+            return callback(response.success, labs);
         });
+    });
 };
 
 /**
- * Updates the labs for the requested user. Used only on the sign up.
- * @param id_user of the user to update
- * @param addLabsInfo body:
- * <ul>
- * <li> [labs_id]: an array of the labs ids (i.e. [elec, herr, mech])
- * </ul>
+ * Adds the user to each lab he requested to join.
+ * @param id_user
+ * @param labs
  * @param callback
  */
-module.exports.addLabs = function (id_user, addLabsInfo, callback) {
-    UserModel.findOne({id_user: id_user})
-        .exec(function (err, user) {
-            if (err) return callback(response.failed.generic);
+module.exports.addSignUpRequest = function (id_user, labs, callback) {
+    UserModel.findOne({id_user: id_user}, function (err, user) {
+        if (err) return callback(response.failed.generic);
 
             if (!user) return callback(response.failed.sign_up.no_user_found);
 
-            user.labs = addLabsInfo.labs;
 
-            user.save(function (err) {
+        var updates = [];
+        LabModel.find({id: {$in: labs}}, function (err, labs) {
+            labs.forEach(function (lab) {
+                updates.push(function (callback) {
+                    if (lab.sign_up_requests.length < 1) {
+                        lab.sign_up_requests.push({
+                            user_name: user.full_name,
+                            user_id: user.id_user,
+                            date_requested: Date.now()
+                        });
+
+                        lab.save(function () {
+                            return callback(null, 'Saved');
+                        });
+                    } else {
+                        lab.sign_up_requests.forEach(function (request) {
+                            if (request.user_id != user.id_user) {
+                                lab.sign_up_requests.push({
+                                    user_name: user.full_name,
+                                    user_id: user.id_user,
+                                    date_requested: Date.now()
+                                });
+
+                                lab.save(function () {
+                                    return callback(null, 'Saved');
+                                });
+                            } else {
+                                return callback(null, 'Already exists on lab ' + lab.id);
+                            }
+                        });
+                    }
+                });
+            });
+
+            async.series(updates, function (err, result) {
                 if (err) return callback(response.failed.generic);
 
                 return callback(response.success);
