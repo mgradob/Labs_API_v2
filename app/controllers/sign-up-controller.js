@@ -4,7 +4,7 @@
 var UserModel = require('../models/user'),
     LabModel = require('../models/lab'),
     SignUpRequestModel = require('../models/sign-up-request'),
-    response = require('../utils/api-utils').labs_response;
+    response = require('../utils/api-util').labs_response;
 
 /**
  * Creates a user with default params.
