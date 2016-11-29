@@ -15,13 +15,18 @@ module.exports.signIn = function (signInInfo, callback) {
     UserModel.findOne({id_user: signInInfo.id_user}, function (err, user) {
         if (err) return callback(response.failed.generic);
 
+        if (!user) return callback(response.failed.sign_in.wrong_info);
+
         user.comparePassword(signInInfo.password, function (err, match) {
             if (match && !err) {
                 var token = authUtil.generateToken(user.user_id);
 
                 logger.logi('Sign In', 'Token: ' + token);
 
-                return callback(response.success, {token: 'JWT ' + token});
+                return callback(response.success, {
+                    token: 'JWT ' + token,
+                    isAdmin: user.is_admin
+                });
             } else return callback(response.failed.sign_in.wrong_info);
         });
     });
