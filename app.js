@@ -9,12 +9,15 @@ var express = require('express'),
 
 // project requirements
 var mongoose = require('mongoose'),
-    jwt = require('jsonwebtoken'),
-    config = require('./app/config');
+    passport = require('passport'),
+    jwt = require('jwt-simple'),
+    config = require('./app/config'),
+    cors = require('cors');
 
 // api url routes
 var routeSignUp = require('./app/routes/sign-up-router'),
     routeSignIn = require('./app/routes/sign-in-router'),
+    routeSignOut = require('./app/routes/sign-out-router'),
     routeHome = require('./app/routes/home-router');
 
 var app = express();
@@ -34,6 +37,9 @@ mongoose.connection.on('error', function (err) {
 // set secret for json web token
 app.set('secret', config.dbSecret);
 
+// set cors usage
+app.use(cors());
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -47,9 +53,13 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // api url routes usage
-app.use('/home', routeHome);
 app.use('/signin', routeSignIn);
 app.use('/signup', routeSignUp);
+app.use('/signout', routeSignOut);
+app.use('/home', routeHome);
+
+// api auth
+app.use(passport.initialize());
 
 // logger
 app.use(morgan('dev'));

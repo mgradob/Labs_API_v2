@@ -4,7 +4,7 @@
 var express = require('express'),
     router = express.Router(),
     controller = require('../controllers/sign-up-controller'),
-    apiResponse = require('../utils/api-utils').LabsJsonResponse;
+    apiResponse = require('../utils/api-util').LabsJsonResponse;
 
 router.route('/')
     .post(function (req, res) {
