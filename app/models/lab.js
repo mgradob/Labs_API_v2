@@ -52,21 +52,6 @@ var RequestSchema = new Schema({
     //TODO review model
 });
 
-var SignUpRequestSchema = new Schema({
-    user_name: {
-        type: String,
-        required: true
-    },
-    user_id: {
-        type: String,
-        required: true
-    },
-    date_requested: {
-        type: String,
-        required: true
-    }
-});
-
 var LabSchema = new Schema({
     id: {
         type: String,
@@ -81,8 +66,7 @@ var LabSchema = new Schema({
         required: true
     },
     categories: [CategorySchema],
-    requests: [RequestSchema],
-    sign_up_requests: [SignUpRequestSchema]
+    requests: [RequestSchema]
 });
 
 module.exports = mongoose.model('Lab', LabSchema);
