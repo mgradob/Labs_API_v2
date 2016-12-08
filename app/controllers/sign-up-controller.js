@@ -56,7 +56,7 @@ module.exports.getAllLabs = function (id_user, callback) {
     UserModel.findOne({id_user: id_user}, function (err, user) {
         if (err) return callback(response.failed.generic);
 
-        if (!user) return callback(response.failed.sign_up.no_user_found);
+        if (!user) return callback(response.failed.sign_up.no_data_found);
 
             LabModel.find({campus: user.campus}, {_id: 0, id: 1, name: 1}, function (err, labs) {
                 if (err) return callback(response.failed.generic);
@@ -76,7 +76,7 @@ module.exports.addSignUpRequest = function (userId, requestedLabs, callback) {
     UserModel.findOne({id_user: userId}, function (err, user) {
         if (err) return callback(response.failed.generic);
 
-        if (!user) return callback(response.failed.sign_up.no_user_found);
+        if (!user) return callback(response.failed.sign_up.no_data_found);
 
         SignUpRequestModel.findOne({user_id: userId}, function (err, userSignUps) {
             if (err) return callback(response.failed.generic);

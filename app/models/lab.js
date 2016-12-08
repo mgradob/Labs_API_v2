@@ -61,6 +61,10 @@ var LabSchema = new Schema({
         type: String,
         required: true
     },
+    admin_id: {
+        type: String,
+        required: true
+    },
     campus: {
         type: String,
         required: true

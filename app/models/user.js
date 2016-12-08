@@ -44,6 +44,10 @@ var BorrowedSchema = new Schema({
     date_requested: {
         type: Date,
         required: true
+    },
+    lab_id: {
+        type: String,
+        requred: true
     }
 });
 
