@@ -14,31 +14,35 @@ module.exports.labs_response = {
     failed: {
         generic: {
             code: 200,
-            message: 'Failed - Reason Unknown'
+            message: 'Failed - Reason unknown'
+        },
+        no_data_found: {
+            code: 201,
+            message: 'Failed - No data found'
         },
         sign_up: {
             already_exists: {
-                code: 201,
+                code: 211,
                 message: 'User already exists'
             },
-            no_user_found: {
-                code: 202,
+            no_data_found: {
+                code: 212,
                 message: 'User not found'
             }
         },
         sign_in: {
             missing_info: {
-                code: 211,
+                code: 221,
                 message: 'Missing username or password'
             },
             wrong_info: {
-                code: 212,
+                code: 222,
                 message: 'Incorrect username or password'
             }
         },
         home: {
             no_labs_accepted: {
-                code: 221,
+                code: 231,
                 message: 'User hasn\'t been accepted to a lab yet'
             }
         }

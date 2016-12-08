@@ -3,9 +3,15 @@
  */
 var UserModel = require('../models/user'),
     LabModel = require('../models/lab'),
+    SignUpRequests = require('../models/sign-up-request'),
     response = require('../utils/api-util').labs_response;
 
-var adminHomeResponse = {};
+var adminHomeResponse = {
+    signUpRequests: [],
+    requests: [],
+    categories: [],
+    users: []
+};
 
 var studentHomeResponse = {
     cart: [],
@@ -20,37 +26,57 @@ var studentHomeResponse = {
  * @param callback
  */
 module.exports.getUserHome = function (userId, callback) {
-    UserModel.findOne({
-            id_user: userId
-        })
-        .exec(function (err, student) {
-            if (err) return callback(response.failed.generic);
+    UserModel.findOne({id_user: userId}, function (err, user) {
+        if (err) return callback(response.failed.generic);
 
-            if (student.is_admin) {
-                return callback(response.not_implemented_yet);
-            } else {
-                studentHomeResponse.cart = student.cart;
-                studentHomeResponse.borrowed = student.borrowed;
-                studentHomeResponse.history = student.history;
+        if (user.is_admin) {
+            LabModel.findOne({admin_id: userId}, function (err, lab) {
+               if (err) return callback(response.failed.generic);
 
-                LabModel.find({
-                        id: {
-                            $in: student.labs
-                        }
-                    }, {
-                        _id: 0,
-                        name: 1,
-                        categories: 1
-                    })
-                    .exec(function (err, labs) {
-                        if (err) return callback(response.failed.generic);
+               if (!lab) return callback(response.failed.no_data_found);
 
-                        if (labs.length === 0) return callback(response.failed.home.no_labs_accepted);
+               adminHomeResponse.requests = lab.requests;
 
-                        studentHomeResponse.labs = labs;
+               lab.categories.forEach(function (category) {
+                   adminHomeResponse.categories.push(category.name);
+               });
 
-                        return callback(response.success, studentHomeResponse);
-                    });
-            }
-        });
+               UserModel.find({labs: lab.id}, function (err, users) {
+                   if(err) return callback(response.failed.generic);
+
+                   adminHomeResponse.users = users != null ? users : [];
+
+                   SignUpRequests.find({labs: lab.id}, {_id:0, user_name:1, user_id:1}, function (err, signUpRequests) {
+                       if(err) return callback(response.failed.generic);
+
+                       adminHomeResponse.signUpRequests = signUpRequests != null ? signUpRequests : [];
+
+                       return callback(response.success, adminHomeResponse);
+                   });
+               });
+            });
+        } else {
+            studentHomeResponse.cart = user.cart.slice(0, 3);
+            studentHomeResponse.borrowed = user.borrowed.slice(0, 3);
+            studentHomeResponse.history = user.history.slice(0, 3);
+
+            LabModel.find({
+                id: {
+                    $in: user.labs
+                }
+            }, {
+                _id: 0,
+                name: 1,
+                categories: 1
+            }, function (err, labs) {
+                if (err) return callback(response.failed.generic);
+
+                if (labs.length === 0) return callback(response.failed.home.no_labs_accepted);
+
+                studentHomeResponse.labs = labs.slice(0, 3);
+
+                return callback(response.success, studentHomeResponse);
+            });
+        }
+    });
 };
