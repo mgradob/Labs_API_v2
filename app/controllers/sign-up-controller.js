@@ -31,7 +31,8 @@ module.exports.signUp = function (signUpInfo, callback) {
             id_credential: 0,
             career: signUpInfo.career,
             campus: signUpInfo.campus,
-            mail: signUpInfo.id_user + '@itesm.mx',
+            mail: signUpInfo.id_user.toLowerCase() + '@itesm.mx',
+            user_type: 'user',
             cart: [],
             borrowed: [],
             labs: [],
@@ -39,11 +40,10 @@ module.exports.signUp = function (signUpInfo, callback) {
         });
 
         newUser.save(function (err) {
-            if (err) return callback(response.failed.sign_up.already_exists);
+            if (err) return callback(response.failed.generic);
 
             return callback(response.success);
         });
-
     });
 };
 
@@ -58,12 +58,12 @@ module.exports.getAllLabs = function (id_user, callback) {
 
         if (!user) return callback(response.failed.sign_up.no_data_found);
 
-            LabModel.find({campus: user.campus}, {_id: 0, id: 1, name: 1}, function (err, labs) {
-                if (err) return callback(response.failed.generic);
+        LabModel.find({campus: user.campus}, {_id: 0, id: 1, name: 1}, function (err, labs) {
+            if (err) return callback(response.failed.generic);
 
-                return callback(response.success, labs);
-            });
+            return callback(response.success, labs);
         });
+    });
 };
 
 /**
