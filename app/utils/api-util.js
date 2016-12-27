@@ -45,6 +45,12 @@ module.exports.labs_response = {
                 code: 231,
                 message: 'User hasn\'t been accepted to a lab yet'
             }
+        },
+        inventory: {
+            category_already_exists: {
+                code: 241,
+                message: 'Category already exists'
+            }
         }
     },
     not_implemented_yet: {
