@@ -21,7 +21,22 @@ module.exports.signIn = function (signInInfo, callback) {
 
                 logger.logi('Sign In', 'Token: ' + token);
 
-                return callback(response.success, {token: 'JWT ' + token});
+                var responseData;
+
+                responseData = {
+                    token: 'JWT ' + token,
+                    user: {
+                        id_user: user.id_user,
+                        full_name: user.full_name,
+                        career: user.career,
+                        campus: user.campus,
+                        mail: user.mail,
+                        labs: user.labs,
+                        user_type: user.user_type
+                    }
+                };
+
+                return callback(response.success, responseData);
             } else return callback(response.failed.sign_in.wrong_info);
         });
     });
