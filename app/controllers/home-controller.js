@@ -21,39 +21,58 @@ var studentHomeResponse = {
 };
 
 /**
- * Gets the home information for the requested user
+ * Gets the home information for the requested user.
  * @param userId of the requested user
  * @param callback
  */
-module.exports.getUserHome = function (userId, callback) {
+module.exports.getUserHome = function (userId, labId, callback) {
+    adminHomeResponse = {
+        signUpRequests: [],
+        requests: [],
+        categories: [],
+        users: []
+    };
+    studentHomeResponse = {
+        cart: [],
+        borrowed: [],
+        labs: [],
+        history: []
+    };
+
     UserModel.findOne({id_user: userId}, function (err, user) {
         if (err) return callback(response.failed.generic);
 
-        if (user.is_admin) {
-            LabModel.findOne({admin_id: userId}, function (err, lab) {
-               if (err) return callback(response.failed.generic);
+        if (!user) return callback(response.failed.no_data_found);
 
-               if (!lab) return callback(response.failed.no_data_found);
+        if (user.user_type === 'admin') {
+            LabModel.findOne({id: labId}, function (err, lab) {
+                if (err) return callback(response.failed.generic);
 
-               adminHomeResponse.requests = lab.requests;
+                if (!lab) return callback(response.failed.no_data_found);
 
-               lab.categories.forEach(function (category) {
-                   adminHomeResponse.categories.push(category.name);
-               });
+                adminHomeResponse.requests = lab.requests;
 
-               UserModel.find({labs: lab.id}, function (err, users) {
-                   if(err) return callback(response.failed.generic);
+                lab.categories.forEach(function (category) {
+                    adminHomeResponse.categories.push(category.name);
+                });
 
-                   adminHomeResponse.users = users != null ? users : [];
+                UserModel.find({labs: lab.id}, function (err, users) {
+                    if (err) return callback(response.failed.generic);
 
-                   SignUpRequests.find({labs: lab.id}, {_id:0, user_name:1, user_id:1}, function (err, signUpRequests) {
-                       if(err) return callback(response.failed.generic);
+                    adminHomeResponse.users = users != null ? users : [];
 
-                       adminHomeResponse.signUpRequests = signUpRequests != null ? signUpRequests : [];
+                    SignUpRequests.find({labs: lab.id}, {
+                        _id: 0,
+                        user_name: 1,
+                        user_id: 1
+                    }, function (err, signUpRequests) {
+                        if (err) return callback(response.failed.generic);
 
-                       return callback(response.success, adminHomeResponse);
-                   });
-               });
+                        adminHomeResponse.signUpRequests = signUpRequests != null ? signUpRequests : [];
+
+                        return callback(response.success, adminHomeResponse);
+                    });
+                });
             });
         } else {
             studentHomeResponse.cart = user.cart.slice(0, 3);
