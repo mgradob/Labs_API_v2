@@ -18,4 +18,21 @@ router.route('/:id_lab')
         })
     });
 
+router.route('/:id_lab/:id_category')
+    .get(function (req, res) {
+        controller.getCategory(req.query.id_user, req.params.id_lab, req.params.id_category, function (result, data) {
+            return res.json(apiResponse(result, data));
+        })
+    })
+    .post(function (req, res) {
+        controller.editCategory(req.query.id_user, req.params.id_lab, req.params.id_category, req.body, function (result, data) {
+            return res.json(apiResponse(result, data));
+        })
+    })
+    .delete(function (req, res) {
+        controller.deleteCategory(req.query.id_user, req.params.id_lab, req.params.id_category, function (result, data) {
+            return res.json(apiResponse(result, data));
+        })
+    });
+
 module.exports = router;

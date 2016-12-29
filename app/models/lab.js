@@ -4,8 +4,8 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
-var ComponentSchema = new Schema({
-    id_component: {
+var ItemSchema = new Schema({
+    id: {
         type: Number,
         required: true
     },
@@ -33,7 +33,7 @@ var CategorySchema = new Schema({
         type: String,
         required: true
     },
-    components: [ComponentSchema]
+    items: [ItemSchema]
 });
 
 var RequestSchema = new Schema({
