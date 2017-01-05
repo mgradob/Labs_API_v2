@@ -90,7 +90,7 @@ module.exports.addSignUpRequest = function (userId, requestedLabs, callback) {
 
                 requestedLabs.forEach(function (lab) {
                     signUp.labs.push({
-                        lab_id: lab,
+                        id: lab,
                         date_requested: Date.now()
                     })
                 });

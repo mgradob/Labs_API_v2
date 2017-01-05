@@ -20,7 +20,8 @@ var routeSignUp = require('./app/routes/sign-up-router'),
     routeSignOut = require('./app/routes/sign-out-router'),
     routeHome = require('./app/routes/home-router'),
     routeInventory = require('./app/routes/inventory-router'),
-    routeUsers = require('./app/routes/users-router');
+    routeUsers = require('./app/routes/users-router'),
+    routeJoin = require('./app/routes/join-router');
 
 var app = express();
 
@@ -61,6 +62,7 @@ app.use('/signout', routeSignOut);
 app.use('/home', routeHome);
 app.use('/inventory', routeInventory);
 app.use('/users', routeUsers);
+app.use('/join', routeJoin);
 
 // api auth
 app.use(passport.initialize());
