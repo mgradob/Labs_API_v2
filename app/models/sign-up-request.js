@@ -5,7 +5,11 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var LabRequestedSchema = new Schema({
-    lab_id: {
+    name: {
+        type: String,
+        required: true
+    },
+    id: {
         type: String,
         required: true
     },
