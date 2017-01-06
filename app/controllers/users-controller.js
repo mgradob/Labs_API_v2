@@ -47,11 +47,11 @@ module.exports.getUserOfLab = function (labId, userId, callback) {
  * Reasons:
  * <ul>
  * <li>Changing User ID is not possible because of uniqueness on ITESM system.</li>
- * <li>Changing password is handled by resetting password functionality.</li>
- * <li>Changing campus might lead to carts not being full cleared. User might, or might not, be allowed to change campus if cart is not empty.</li>
+ * <li>TODO: Changing password is handled by resetting password functionality.</li>
+ * <li>TODO: Changing campus might lead to carts not being full cleared. User might, or might not, be allowed to change campus if cart is not empty.</li>
  * <li>Email is automatically binded to user ID.</li>
- * <li>Changing User Type is handled by changing user type functionality.</li>
- * <li>Changing Cart, Borrowed and Labs is handled by specific functionality.</li>
+ * <li>TODO: Changing User Type is handled by changing user type functionality.</li>
+ * <li>TODO: Changing Cart, Borrowed and Labs is handled by specific functionality.</li>
  * <li>History is not allowed to change.</li>
  * </ul>
  */
