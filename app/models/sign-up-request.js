@@ -5,6 +5,10 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var LabRequestedSchema = new Schema({
+    name: {
+        type: String,
+        required: true
+    },
     id: {
         type: String,
         required: true

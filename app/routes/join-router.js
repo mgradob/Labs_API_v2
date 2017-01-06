@@ -13,4 +13,16 @@ router.route('/:id_lab')
         });
     });
 
+router.route('/:id_lab/:id_user')
+    .post(function (req, res) {
+        controller.acceptUserTo(req.params.id_lab, req.params.id_user, req.body, function(result, data) {
+            return res.json(apiResponse(result, data));
+        });
+    })
+    .delete(function (req, res) {
+        controller.denyUserTo(req.params.id_lab, req.params.id_user, function (result, data) {
+            return res.json(apiResponse(result, data));
+        })
+    });
+
 module.exports = router;
