@@ -6,6 +6,14 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var CartSchema = new Schema({
+    lab_id: {
+        type: String,
+        required: true
+    },
+    component_id: {
+        type: Number,
+        required: true
+    },
     component_name: {
         type: String,
         required: true
