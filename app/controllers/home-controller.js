@@ -79,18 +79,15 @@ module.exports.getUserHome = function (userId, labId, callback) {
             studentHomeResponse.borrowed = user.borrowed.slice(0, 3);
             studentHomeResponse.history = user.history.slice(0, 3);
 
-            LabModel.find({
-                id: {
-                    $in: user.labs
-                }
-            }, {
-                _id: 0,
-                name: 1,
-                categories: 1
-            }, function (err, labs) {
+            var labsIds = [];
+            user.labs.forEach(function (lab) {
+                labsIds.push(lab.id);
+            });
+
+            LabModel.find({id: { $in: labsIds}}, {name: 1, categories: 1}, function (err, labs) {
                 if (err) return callback(response.failed.generic);
 
-                if (labs.length === 0) return callback(response.failed.home.no_labs_accepted);
+                if (!labs) return callback(response.failed.no_data_found);
 
                 studentHomeResponse.labs = labs.slice(0, 3);
 
