@@ -6,6 +6,14 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var CartSchema = new Schema({
+    lab_id: {
+        type: String,
+        required: true
+    },
+    component_id: {
+        type: Number,
+        required: true
+    },
     component_name: {
         type: String,
         required: true
@@ -44,6 +52,10 @@ var BorrowedSchema = new Schema({
     date_requested: {
         type: Date,
         required: true
+    },
+    lab_id: {
+        type: String,
+        requred: true
     }
 });
 
@@ -60,6 +72,20 @@ var HistorySchema = new Schema({
     date_in: Date
 });
 
+var LabSchema = new Schema({
+    id: {
+        type: String,
+        required: true
+    },
+    name: {
+        type: String,
+        required: true
+    }
+});
+
+/**
+ * user_type: admin, subadmin, user
+ */
 var UserSchema = new Schema({
     id_user: {
         type: String,
@@ -89,14 +115,13 @@ var UserSchema = new Schema({
         type: String,
         required: true
     },
-    is_admin: {
-        type: Boolean,
-        required: true,
-        default: false
+    user_type: {
+        type: String,
+        required: true
     },
     cart: [CartSchema],
     borrowed: [BorrowedSchema],
-    labs: [String],
+    labs: [LabSchema],
     history: [HistorySchema]
 });
 

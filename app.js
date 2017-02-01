@@ -18,7 +18,12 @@ var mongoose = require('mongoose'),
 var routeSignUp = require('./app/routes/sign-up-router'),
     routeSignIn = require('./app/routes/sign-in-router'),
     routeSignOut = require('./app/routes/sign-out-router'),
-    routeHome = require('./app/routes/home-router');
+    routeHome = require('./app/routes/home-router'),
+    routeInventory = require('./app/routes/inventory-router'),
+    routeUsers = require('./app/routes/users-router'),
+    routeJoin = require('./app/routes/join-router'),
+    routeRequests = require('./app/routes/requests-router'),
+    routeAccount = require('./app/routes/account-router');
 
 var app = express();
 
@@ -57,6 +62,11 @@ app.use('/signin', routeSignIn);
 app.use('/signup', routeSignUp);
 app.use('/signout', routeSignOut);
 app.use('/home', routeHome);
+app.use('/inventory', routeInventory);
+app.use('/users', routeUsers);
+app.use('/join', routeJoin);
+app.use('/requests', routeRequests);
+app.use('/account', routeAccount);
 
 // api auth
 app.use(passport.initialize());

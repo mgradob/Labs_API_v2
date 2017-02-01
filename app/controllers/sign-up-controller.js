@@ -3,6 +3,7 @@
  */
 var UserModel = require('../models/user'),
     LabModel = require('../models/lab'),
+    SignUpRequestModel = require('../models/sign-up-request'),
     response = require('../utils/api-util').labs_response;
 
 /**
@@ -30,7 +31,8 @@ module.exports.signUp = function (signUpInfo, callback) {
             id_credential: 0,
             career: signUpInfo.career,
             campus: signUpInfo.campus,
-            mail: signUpInfo.id_user + '@itesm.mx',
+            mail: signUpInfo.id_user.toLowerCase() + '@itesm.mx',
+            user_type: 'user',
             cart: [],
             borrowed: [],
             labs: [],
@@ -38,11 +40,10 @@ module.exports.signUp = function (signUpInfo, callback) {
         });
 
         newUser.save(function (err) {
-            if (err) return callback(response.failed.sign_up.already_exists);
+            if (err) return callback(response.failed.generic);
 
             return callback(response.success);
         });
-
     });
 };
 
@@ -55,37 +56,69 @@ module.exports.getAllLabs = function (id_user, callback) {
     UserModel.findOne({id_user: id_user}, function (err, user) {
         if (err) return callback(response.failed.generic);
 
-        if (!user) return callback(response.failed.sign_up.no_user_found);
+        if (!user) return callback(response.failed.sign_up.no_data_found);
 
         LabModel.find({campus: user.campus}, {_id: 0, id: 1, name: 1}, function (err, labs) {
-                if (err) return callback(response.failed.generic);
+            if (err) return callback(response.failed.generic);
 
-                return callback(response.success, labs);
-            });
+            return callback(response.success, labs);
+        });
     });
 };
 
 /**
- * Updates the labs for the requested user. Used only on the sign up.
- * @param id_user of the user to update
- * @param addLabsInfo body:
- * <ul>
- * <li> [labs_id]: an array of the labs ids (i.e. [elec, herr, mech])
- * </ul>
+ * Adds a request to join a lab or labs from an user.
+ * @param userId
+ * @param requestedLabs
  * @param callback
  */
-module.exports.addLabs = function (id_user, addLabsInfo, callback) {
-    UserModel.findOne({id_user: id_user}, function (err, user) {
+module.exports.addSignUpRequest = function (userId, requestedLabs, callback) {
+    UserModel.findOne({id_user: userId}, function (err, user) {
         if (err) return callback(response.failed.generic);
 
-        if (!user) return callback(response.failed.sign_up.no_user_found);
+        if (!user) return callback(response.failed.sign_up.no_data_found);
 
-        user.labs = addLabsInfo.labs;
-
-        user.save(function (err) {
+        SignUpRequestModel.findOne({user_id: userId}, function (err, userSignUps) {
             if (err) return callback(response.failed.generic);
 
-            return callback(response.success);
+            if (!userSignUps) {
+                var signUp = new SignUpRequestModel({
+                    user_name: user.full_name,
+                    user_id: user.id_user,
+                    labs: []
+                });
+
+                requestedLabs.forEach(function (lab) {
+                    signUp.labs.push({
+                        id: lab.id,
+                        name: lab.name,
+                        date_requested: Date.now()
+                    })
+                });
+
+                signUp.save(function (err) {
+                    if (err) return callback(response.failed.generic);
+
+                    return callback(response.success);
+                });
+            } else {
+                requestedLabs.forEach(function (lab) {
+                    userSignUps.labs.forEach(function (alreadyRequestedLab) {
+                        if (lab != alreadyRequestedLab.lab_id) {
+                            userSignUps.labs.push({
+                                lab_id: lab,
+                                date_requested: Date.now()
+                            })
+                        }
+                    });
+                });
+
+                userSignUps.save(function (err) {
+                    if (err) return callback(response.failed.generic);
+
+                    return callback(response.success);
+                })
+            }
         });
     });
 };

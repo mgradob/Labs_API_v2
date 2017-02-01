@@ -4,8 +4,8 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
-var ComponentSchema = new Schema({
-    id_component: {
+var ItemSchema = new Schema({
+    id: {
         type: Number,
         required: true
     },
@@ -33,7 +33,7 @@ var CategorySchema = new Schema({
         type: String,
         required: true
     },
-    components: [ComponentSchema]
+    items: [ItemSchema]
 });
 
 var RequestSchema = new Schema({
@@ -49,6 +49,7 @@ var RequestSchema = new Schema({
         type: Date,
         required: true
     }
+    //TODO review model
 });
 
 var LabSchema = new Schema({
@@ -57,6 +58,10 @@ var LabSchema = new Schema({
         required: true
     },
     name: {
+        type: String,
+        required: true
+    },
+    admin_id: {
         type: String,
         required: true
     },
