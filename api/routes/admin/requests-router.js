@@ -3,8 +3,8 @@
  */
 var express = require('express'),
     router = express.Router(),
-    controller = require('../controllers/requests-controller'),
-    apiResponse = require('../utils/api-util').LabsJsonResponse;
+    controller = require('../../controllers/admin/requests-controller'),
+    apiResponse = require('../../utils/api-util').LabsJsonResponse;
 
 router.route('/:id_lab')
     .get(function (req, res) {

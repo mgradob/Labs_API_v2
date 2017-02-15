@@ -1,9 +1,9 @@
 /**
  * Created by mgradob on 1/3/17.
  */
-var UserModel = require('../models/user'),
-    SignUpRequestModel = require('../models/sign-up-request'),
-    response = require('../utils/api-util').labs_response;
+var UserModel = require('../../models/user'),
+    SignUpRequestModel = require('../../models/sign-up-request'),
+    response = require('../../utils/api-util').labs_response;
 
 /**
  * Gets all available join requests for a lab.

@@ -19,11 +19,17 @@ var apiSignUp = require('./api/routes/sign-up-router'),
     apiSignIn = require('./api/routes/sign-in-router'),
     apiSignOut = require('./api/routes/sign-out-router'),
     apiHome = require('./api/routes/home-router'),
-    apiInventory = require('./api/routes/inventory-router'),
-    apiUsers = require('./api/routes/users-router'),
-    apiJoin = require('./api/routes/join-router'),
-    apiRequests = require('./api/routes/requests-router'),
     apiAccount = require('./api/routes/account-router');
+
+// api admin url routes
+var apiInventory = require('./api/routes/admin/inventory-router'),
+    apiUsers = require('./api/routes/admin/users-router'),
+    apiJoin = require('./api/routes/admin/join-router'),
+    apiRequests = require('./api/routes/admin/requests-router');
+
+// api user url routes
+var apiCart = require('./api/routes/user/cart-router'),
+    apiHistory = require('./api/routes/user/history-router');
 
 var app = express();
 
@@ -58,15 +64,21 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // api url routes usage
-app.use('/api/signin', apiSignIn);
-app.use('/api/signup', apiSignUp);
-app.use('/api/signout', apiSignOut);
-app.use('/api/home', apiHome);
-app.use('/api/inventory', apiInventory);
-app.use('/api/users', apiUsers);
-app.use('/api/join', apiJoin);
-app.use('/api/requests', apiRequests);
-app.use('/api/account', apiAccount);
+app.use('/signin', apiSignIn);
+app.use('/signup', apiSignUp);
+app.use('/signout', apiSignOut);
+app.use('/home', apiHome);
+app.use('/account', apiAccount);
+
+// api admin url routes usage
+app.use('/inventory', apiInventory);
+app.use('/users', apiUsers);
+app.use('/join', apiJoin);
+app.use('/requests', apiRequests);
+
+// api user url routes usage
+app.use('/cart', apiCart);
+app.use('/history', apiHistory);
 
 // api auth
 app.use(passport.initialize());

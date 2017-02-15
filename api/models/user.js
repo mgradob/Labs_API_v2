@@ -10,6 +10,7 @@ var CartSchema = new Schema({
         type: String,
         required: true
     },
+    lab_name: String,
     component_id: {
         type: Number,
         required: true

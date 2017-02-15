@@ -1,7 +1,7 @@
 var express = require('express'),
     router = express.Router(),
-    controller = require('../controllers/users-controller'),
-    apiResponse = require('../utils/api-util').LabsJsonResponse;
+    controller = require('../../controllers/admin/users-controller'),
+    apiResponse = require('../../utils/api-util').LabsJsonResponse;
 
 router.route('/:id_lab')
     .get(function (req, res) {

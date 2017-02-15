@@ -1,8 +1,8 @@
 /**
  * Created by mgradob on 1/6/17.
  */
-var UserModel = require('../models/user'),
-    response = require('../utils/api-util').labs_response;
+var UserModel = require('../../models/user'),
+    response = require('../../utils/api-util').labs_response;
 
 /**
  * Gets all available requests (carts) for this particular lab.
@@ -47,5 +47,31 @@ module.exports.getRequest = function (labId, userId, callback) {
         cart.cart = user.cart;
 
         return callback(response.success, cart);
+    });
+};
+
+module.exports.userGetRequest = function(userId, callback) {
+    UserModel.findOne({id_user: userId}, function (err, user) {
+        if (err) return callback(response.failed.generic);
+
+        if (!user) return callback(response.failed.no_data_found);
+
+        return callback(response.success, user.cart);
+    });
+}
+
+module.exports.addRequest = function(userId, cart, callback) {
+    UserModel.findOne({id_user:userId}, function(err, user) {
+        if (err) return callback(response.failed.generic);
+
+        if (!user) return callback(response.failed.no_data_found);
+
+        user.cart = cart;
+
+        user.save(function(err) {
+            if (err) return callback(response.failed.generic);
+
+            return callback(response.success);
+        });
     });
 };

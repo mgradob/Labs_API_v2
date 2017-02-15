@@ -1,17 +1,34 @@
 /**
  * Created by mgradob on 12/13/16.
  */
-var LabModel = require('../models/lab'),
-    response = require('../utils/api-util').labs_response;
+var LabModel = require('../../models/lab'),
+    UserModel = require('../../models/user'),
+    response = require('../../utils/api-util').labs_response;
 
 module.exports.getInventoryOf = function (userId, labId, callback) {
-    LabModel.findOne({id: labId, admin_id: userId}, function (err, lab) {
+    UserModel.findOne({id_user: userId}, function(err, user) {
         if (err) return callback(response.failed.generic);
 
-        if (!lab) return callback(response.failed.no_data_found);
+        if (!user) return callback(response.failed.no_data_found);
 
-        return callback(response.success, lab.categories);
-    });
+        if(user.user_type === 'admin') {
+            LabModel.findOne({id: labId, admin_id: userId}, function (err, lab) {
+                if (err) return callback(response.failed.generic);
+
+                if (!lab) return callback(response.failed.no_data_found);
+
+                return callback(response.success, lab.categories);
+            });
+        } else {
+            LabModel.findOne({id: labId}, function (err, lab) {
+                if (err) return callback(response.failed.generic);
+
+                if (!lab) return callback(response.failed.no_data_found);
+
+                return callback(response.success, lab.categories);
+            });
+        }
+    });    
 };
 
 module.exports.getCategory = function (userId, labId, categoryId, callback) {

@@ -1,5 +1,5 @@
-var UserModel = require('../models/user'),
-    response = require('../utils/api-util').labs_response;
+var UserModel = require('../../models/user'),
+    response = require('../../utils/api-util').labs_response;
 
 /**
  * Gets all the users registered to a specifc lab.
