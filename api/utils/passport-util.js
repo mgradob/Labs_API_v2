@@ -1,7 +1,7 @@
 /**
  * Created by mgradob on 11/22/16.
  */
-var secret = require('../config').dbSecret,
+var secret = require('../../config').dbSecret,
     JwtStrategy = require('passport-jwt').Strategy,
     UserModel = require('../models/user');
 

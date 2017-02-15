@@ -2,7 +2,7 @@
  * Created by mgradob on 11/22/16.
  */
 var jwt = require('jwt-simple'),
-    secret = require('../config').dbSecret,
+    secret = require('../../config').dbSecret,
     moment = require('moment'),
     apiResponse = require('../utils/api-util').LabsJsonResponse,
     response = require('../utils/api-util').labs_response;

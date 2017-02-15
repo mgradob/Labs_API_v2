@@ -11,19 +11,19 @@ var express = require('express'),
 var mongoose = require('mongoose'),
     passport = require('passport'),
     jwt = require('jwt-simple'),
-    config = require('./app/config'),
+    config = require('./config'),
     cors = require('cors');
 
 // api url routes
-var routeSignUp = require('./app/routes/sign-up-router'),
-    routeSignIn = require('./app/routes/sign-in-router'),
-    routeSignOut = require('./app/routes/sign-out-router'),
-    routeHome = require('./app/routes/home-router'),
-    routeInventory = require('./app/routes/inventory-router'),
-    routeUsers = require('./app/routes/users-router'),
-    routeJoin = require('./app/routes/join-router'),
-    routeRequests = require('./app/routes/requests-router'),
-    routeAccount = require('./app/routes/account-router');
+var apiSignUp = require('./api/routes/sign-up-router'),
+    apiSignIn = require('./api/routes/sign-in-router'),
+    apiSignOut = require('./api/routes/sign-out-router'),
+    apiHome = require('./api/routes/home-router'),
+    apiInventory = require('./api/routes/inventory-router'),
+    apiUsers = require('./api/routes/users-router'),
+    apiJoin = require('./api/routes/join-router'),
+    apiRequests = require('./api/routes/requests-router'),
+    apiAccount = require('./api/routes/account-router');
 
 var app = express();
 
@@ -58,15 +58,15 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // api url routes usage
-app.use('/signin', routeSignIn);
-app.use('/signup', routeSignUp);
-app.use('/signout', routeSignOut);
-app.use('/home', routeHome);
-app.use('/inventory', routeInventory);
-app.use('/users', routeUsers);
-app.use('/join', routeJoin);
-app.use('/requests', routeRequests);
-app.use('/account', routeAccount);
+app.use('/api/signin', apiSignIn);
+app.use('/api/signup', apiSignUp);
+app.use('/api/signout', apiSignOut);
+app.use('/api/home', apiHome);
+app.use('/api/inventory', apiInventory);
+app.use('/api/users', apiUsers);
+app.use('/api/join', apiJoin);
+app.use('/api/requests', apiRequests);
+app.use('/api/account', apiAccount);
 
 // api auth
 app.use(passport.initialize());
